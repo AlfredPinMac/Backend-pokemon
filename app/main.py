@@ -190,6 +190,19 @@ def get_current_user_from_jwt(
         )
 
 
+@app.get("/")
+def root():
+    return {
+        "message": "Pokemon Backend API activa y funcionando",
+        "docs": "/docs",
+        "health": "/health",
+        "endpoints": {
+            "GET_pokemons": "/api/pokemons (Requiere Bearer JWT)",
+            "POST_pokemons": "/api/pokemons (Requiere Bearer JWT)"
+        }
+    }
+
+
 @app.get("/health")
 def health():
     return {"status": "ok", "service": "pokemon-backend-api"}

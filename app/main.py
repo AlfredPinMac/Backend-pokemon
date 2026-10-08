@@ -27,6 +27,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Access log middleware for Fail2Ban HTTP Flood detection
+@app.middleware("http")
+async def fail2ban_access_log_middleware(request: Request, call_next):
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        client_ip = forwarded.split(",")[0].strip()
+
+    response = await call_next(request)
+
+    # Standard Apache/Nginx combined log format
+    log_line = f'{client_ip} - - [{datetime.now().strftime("%d/%b/%Y:%H:%M:%S +0000")}] "{request.method} {request.url.path} HTTP/1.1" {response.status_code}\n'
+    try:
+        os.makedirs("/var/log/backend", exist_ok=True)
+        with open("/var/log/backend/access.log", "a") as f:
+            f.write(log_line)
+    except Exception:
+        pass
+
+    return response
+
 # JWT Secret & Algorithm (must match the LDAP Auth API secret)
 JWT_SECRET = os.getenv("JWT_SECRET", "super-secret-jwt-key-for-ldap-cybersecurity-lab-2026")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")

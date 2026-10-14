@@ -15,7 +15,7 @@ logger = logging.getLogger("pokemon-api")
 
 app = FastAPI(
     title="Pokémon Backend API",
-    description="Backend para gestión de Pokémon protegido por autenticación Bearer JWT",
+    description="Backend API for Pokémon management protected by Bearer JWT authentication",
     version="1.0.0",
 )
 
@@ -55,7 +55,7 @@ JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 
 security = HTTPBearer(auto_error=False)
 
-# Seed Pokémons Database (In-memory storage)
+# Seed Pokémon Database (In-memory storage)
 POKEMONS_DB: List[dict] = [
     {
         "id": 1,
@@ -67,7 +67,7 @@ POKEMONS_DB: List[dict] = [
         "defense": 40,
         "speed": 90,
         "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
-        "description": "Cuando se enfada, este Pokémon descarga de golpe la energía que almacena en el interior de sus mejillas.",
+        "description": "When it is angered, it immediately discharges the energy stored in the pouches in its cheeks.",
         "created_by": "admin"
     },
     {
@@ -80,7 +80,7 @@ POKEMONS_DB: List[dict] = [
         "defense": 78,
         "speed": 100,
         "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png",
-        "description": "Escupe fuego tan caliente que es capaz de fundir rocas. Se sabe que puede causar incendios forestales involuntarios.",
+        "description": "It spits fire that is hot enough to melt boulders. It may cause forest fires by blowing flames.",
         "created_by": "admin"
     },
     {
@@ -93,7 +93,7 @@ POKEMONS_DB: List[dict] = [
         "defense": 100,
         "speed": 78,
         "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png",
-        "description": "Dispara chorros de agua a gran presión desde los cañones de su caparazón con una precisión asombrosa.",
+        "description": "It crushes its foe under its heavy body to cause fainting. In a pinch, it will withdraw inside its shell.",
         "created_by": "admin"
     },
     {
@@ -106,7 +106,7 @@ POKEMONS_DB: List[dict] = [
         "defense": 83,
         "speed": 80,
         "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
-        "description": "La flor de su lomo absorbe la luz del sol y la transforma en energía, llenando el aire de un aroma agradable.",
+        "description": "A bewitching aroma wafts from its flower. The fragrance calms those engaged in a battle.",
         "created_by": "admin"
     },
     {
@@ -119,7 +119,7 @@ POKEMONS_DB: List[dict] = [
         "defense": 60,
         "speed": 110,
         "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png",
-        "description": "Se oculta en las sombras de las personas. En plena noche puede hacer que la temperatura baje varios grados.",
+        "description": "It hides in shadows. It is said that if Gengar is hiding in a room, the temperature drops by nearly ten degrees.",
         "created_by": "admin"
     },
     {
@@ -132,7 +132,7 @@ POKEMONS_DB: List[dict] = [
         "defense": 90,
         "speed": 130,
         "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png",
-        "description": "Fue creado por recombinación genética de Mew. Sus habilidades en combate han sido llevadas al extremo.",
+        "description": "It was created by a scientist after years of horrific gene splicing and DNA engineering experiments.",
         "created_by": "admin"
     },
     {
@@ -145,7 +145,7 @@ POKEMONS_DB: List[dict] = [
         "defense": 70,
         "speed": 90,
         "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/448.png",
-        "description": "Tiene la habilidad de detectar y manipular los auras de todas las cosas vivientes a su alrededor.",
+        "description": "It has the ability to detect and manipulate the aura emitted by all living things around it.",
         "created_by": "admin"
     },
     {
@@ -158,7 +158,7 @@ POKEMONS_DB: List[dict] = [
         "defense": 50,
         "speed": 55,
         "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png",
-        "description": "Posee una estructura genética inestable que le permite evolucionar en múltiples formas diferentes.",
+        "description": "It has an unstable genetic makeup that suddenly mutates due to its environment. It evolves if given stones.",
         "created_by": "admin"
     }
 ]
@@ -177,7 +177,7 @@ def get_current_user_from_jwt(
         logger.warning("[AUTH] Request rejected: Bearer Token is missing in Authorization header")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Acceso no autorizado: Bearer Token ausente en encabezado Authorization.",
+            detail="Unauthorized access: Bearer Token is missing in Authorization header.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
@@ -190,7 +190,7 @@ def get_current_user_from_jwt(
         if not username:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Token JWT inválido: no contiene información de usuario (sub/username).",
+                detail="Invalid JWT token: does not contain user information (sub/username).",
                 headers={"WWW-Authenticate": "Bearer"},
             )
         logger.info(f"[AUTH] Token valid for user: {username}")
@@ -200,14 +200,14 @@ def get_current_user_from_jwt(
         logger.warning("[AUTH] Token expired")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="El token JWT ha expirado. Inicie sesión nuevamente.",
+            detail="JWT token has expired. Please log in again.",
             headers={"WWW-Authenticate": "Bearer"},
         )
     except jwt.InvalidTokenError as e:
         logger.warning(f"[AUTH] Invalid token: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Token JWT inválido: {str(e)}",
+            detail=f"Invalid JWT token: {str(e)}",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
@@ -215,12 +215,12 @@ def get_current_user_from_jwt(
 @app.get("/")
 def root():
     return {
-        "message": "Pokemon Backend API activa y funcionando",
+        "message": "Pokemon Backend API is active and running",
         "docs": "/docs",
         "health": "/health",
         "endpoints": {
-            "GET_pokemons": "/api/pokemons (Requiere Bearer JWT)",
-            "POST_pokemons": "/api/pokemons (Requiere Bearer JWT)"
+            "GET_pokemons": "/api/pokemons (Requires Bearer JWT)",
+            "POST_pokemons": "/api/pokemons (Requires Bearer JWT)"
         }
     }
 
@@ -235,10 +235,10 @@ def get_pokemons(
     user: dict = Depends(get_current_user_from_jwt)
 ):
     """
-    GET: Devuelve la lista completa de Pokémones.
-    Requiere Bearer Token (JWT) válido.
+    GET: Returns the complete list of Pokémon.
+    Requires valid Bearer Token (JWT).
     """
-    logger.info(f"[GET /api/pokemons] Solicitud autorizada para usuario: {user.get('sub')}")
+    logger.info(f"[GET /api/pokemons] Authorized request for user: {user.get('sub')}")
     return POKEMONS_DB
 
 
@@ -248,8 +248,8 @@ def create_pokemon(
     user: dict = Depends(get_current_user_from_jwt)
 ):
     """
-    POST: Agrega un nuevo Pokémon al listado.
-    Requiere Bearer Token (JWT) válido.
+    POST: Adds a new Pokémon to the database.
+    Requires valid Bearer Token (JWT).
     """
     global current_id_counter
     current_id_counter += 1
@@ -265,12 +265,12 @@ def create_pokemon(
         "defense": pokemon_in.defense,
         "speed": pokemon_in.speed,
         "image_url": pokemon_in.image_url,
-        "description": pokemon_in.description or f"Pokémon registrado por {username}",
+        "description": pokemon_in.description or f"Pokémon registered by {username}",
         "created_by": username
     }
 
     POKEMONS_DB.append(new_pokemon)
-    logger.info(f"[POST /api/pokemons] Pokémon '{new_pokemon['name']}' registrado con ID {new_pokemon['id']} por {username}")
+    logger.info(f"[POST /api/pokemons] Pokémon '{new_pokemon['name']}' registered with ID {new_pokemon['id']} by {username}")
     return new_pokemon
 
 
@@ -282,7 +282,7 @@ def get_pokemon_by_id(
     for p in POKEMONS_DB:
         if p["id"] == pokemon_id:
             return p
-    raise HTTPException(status_code=404, detail=f"Pokémon con ID {pokemon_id} no encontrado")
+    raise HTTPException(status_code=404, detail=f"Pokémon with ID {pokemon_id} not found")
 
 
 @app.delete("/api/pokemons/{pokemon_id}", status_code=status.HTTP_200_OK)
@@ -298,8 +298,8 @@ def delete_pokemon(
             break
 
     if not pokemon_to_remove:
-        raise HTTPException(status_code=404, detail=f"Pokémon con ID {pokemon_id} no encontrado")
+        raise HTTPException(status_code=404, detail=f"Pokémon with ID {pokemon_id} not found")
 
     POKEMONS_DB = [p for p in POKEMONS_DB if p["id"] != pokemon_id]
-    logger.info(f"[DELETE /api/pokemons/{pokemon_id}] Pokémon eliminado por {user.get('sub')}")
-    return {"message": f"Pokémon '{pokemon_to_remove['name']}' eliminado exitosamente", "id": pokemon_id}
+    logger.info(f"[DELETE /api/pokemons/{pokemon_id}] Pokémon deleted by {user.get('sub')}")
+    return {"message": f"Pokémon '{pokemon_to_remove['name']}' deleted successfully", "id": pokemon_id}

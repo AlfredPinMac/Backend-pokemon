@@ -1,48 +1,49 @@
 # Pokémon Backend API (JWT Protected)
 
-Backend REST API desarrollado con **FastAPI** para la gestión de un listado de Pokémones, protegido mediante autenticación con **Bearer Token (JWT)**.
+RESTful backend API developed with **FastAPI** for managing Pokémon data, secured using **Bearer Token (JWT)** authentication.
 
-## Características
+## Features
 
-- **Endpoints REST protegidos**:
-  - `GET /api/pokemons`: Obtiene el listado de Pokémones (requiere Bearer Token).
-  - `POST /api/pokemons`: Da de alta un nuevo Pokémon (requiere Bearer Token).
-  - `GET /api/pokemons/{id}`: Obtiene el detalle de un Pokémon específico (requiere Bearer Token).
-  - `DELETE /api/pokemons/{id}`: Elimina un Pokémon por su ID (requiere Bearer Token).
-  - `GET /health`: Healthcheck público.
-- **Validación de Bearer Token**: Middleware/dependencia que valida la existencia del encabezado `Authorization: Bearer <JWT>` y verifica su firma y expiración.
-- **CORS Habilitado**: Permite la interacción con el cliente Frontend (Vue.js / Vite).
+- **Secured REST Endpoints**:
+  - `GET /api/pokemons`: Retrieves the Pokémon list (requires Bearer Token).
+  - `POST /api/pokemons`: Creates a new Pokémon entry (requires Bearer Token).
+  - `GET /api/pokemons/{id}`: Retrieves details for a specific Pokémon (requires Bearer Token).
+  - `DELETE /api/pokemons/{id}`: Deletes a Pokémon by ID (requires Bearer Token).
+  - `GET /health`: Public healthcheck endpoint.
+- **Bearer Token Verification**: Middleware/dependency that ensures presence of `Authorization: Bearer <JWT>`, validating cryptographic signature and expiration.
+- **Fail2Ban DDoS Mitigation**: Embedded rate logging and `fail2ban` jail monitoring on port 5000.
+- **CORS Enabled**: Configured to interact seamlessly with Vue.js/Vite frontend clients.
 
-## Requisitos
+## Requirements
 
-- Python 3.10+ o Docker
+- Python 3.10+ or Docker
 
-## Instalación y Ejecución Local
+## Local Setup and Execution
 
-1. Crear entorno virtual (opcional pero recomendado):
+1. Create a virtual environment (optional but recommended):
    ```bash
    python -m venv venv
-   .\venv\Scripts\activate  # En Windows PowerShell
+   .\venv\Scripts\activate  # Windows PowerShell
    ```
 
-2. Instalar dependencias:
+2. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Ejecutar servidor de desarrollo:
+3. Run the development server:
    ```bash
    python run.py
-   # O directamente con uvicorn:
+   # Or directly with Uvicorn:
    uvicorn app.main:app --host 0.0.0.0 --port 5000 --reload
    ```
 
-El servidor estará disponible en `http://localhost:5000`.
-Documentación interactiva Swagger: `http://localhost:5000/docs`
+The server will be available at `http://localhost:5000`.
+Interactive Swagger documentation: `http://localhost:5000/docs`
 
-## Ejecución con Docker
+## Docker Execution
 
 ```bash
 docker build -t pokemon-backend .
-docker run -p 5000:5000 pokemon-backend
+docker run --cap-add=NET_ADMIN --cap-add=NET_RAW -p 5000:5000 pokemon-backend
 ```

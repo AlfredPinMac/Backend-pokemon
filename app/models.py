@@ -15,8 +15,8 @@ class PokemonBase(BaseModel):
         example="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
     )
     description: Optional[str] = Field(
-        default="Pokémon registrado en el sistema.",
-        example="Cuando varios de estos Pokémon se juntan, su electricidad puede acumularse y causar tormentas."
+        default="Pokémon registered in the system.",
+        example="When several of these Pokémon gather, their electricity could build and cause lightning storms."
     )
 
 

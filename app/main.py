@@ -1,5 +1,6 @@
 import os
 import logging
+from datetime import datetime
 from typing import List, Optional
 
 import jwt
@@ -37,9 +38,9 @@ async def fail2ban_access_log_middleware(request: Request, call_next):
 
     response = await call_next(request)
 
-    # Standard Apache/Nginx combined log format
-    log_line = f'{client_ip} - - [{datetime.now().strftime("%d/%b/%Y:%H:%M:%S +0000")}] "{request.method} {request.url.path} HTTP/1.1" {response.status_code}\n'
+    # Standard Apache/Nginx combined log format for Fail2Ban
     try:
+        log_line = f'{client_ip} - - [{datetime.now().strftime("%d/%b/%Y:%H:%M:%S +0000")}] "{request.method} {request.url.path} HTTP/1.1" {response.status_code}\n'
         os.makedirs("/var/log/backend", exist_ok=True)
         with open("/var/log/backend/access.log", "a") as f:
             f.write(log_line)
